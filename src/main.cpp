@@ -1,6 +1,9 @@
 #include <iostream>
-
-int main(){
+#include "../include/Player.h"
+int main() {
+    Player mainPlayer;
     int var;
-    std::cout<<"Testing";
+    mainPlayer.printItems();
+
 }
+
