@@ -44,12 +44,7 @@ void Player::printItems() {
 }
 
 // Use an item from the inventory
-void Player::useItem(int indexChoice) {
-    if(indexChoice < 0 || indexChoice >= 7) {
-        std::cout << "Invalid index." << std::endl;
-        return;
-    }
-
+void Player::useItem(int inventoryChoice) {
     // Implement the logic for using an item here
     // For now, just a placeholder response
     std::cout << "Are you sure you want to use this item? (yes/no)" << std::endl;
@@ -58,5 +53,14 @@ void Player::useItem(int indexChoice) {
 // Lose HP
 void Player::loseHP(int hpLost) {
     hp -= hpLost;
-    if(hp < MINHP) hp = MINHP;
+    if(hp < MINHP){
+    hp = MINHP;
+    }
+}
+
+void Player::gainHP(int hpGained){
+    hp += hpGained;
+    if (hp > MAXHP){
+        hp = MAXHP;
+    }
 }

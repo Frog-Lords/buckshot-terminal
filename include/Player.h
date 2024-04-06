@@ -15,6 +15,7 @@ public:
     void shootPlayer(Player& target); //shoot other Player by reference of their object
     void shootSelf(); //self harm not endorsed but thats the name of the game
     void printItems(); //0: item 1, 1: item 2: number corresponds to array index
-    void useItem(int indexChoice); //inventory [index] gives corresponding item provides prompt are you sure yes/no
+    void useItem(int inventoryChoice); //inventory [index] gives corresponding item provides prompt are you sure yes/no
     void loseHP(int hpLost); //lost health womp womp
+    void gainHP(int hpGained);//dun dun gained hp
 };
