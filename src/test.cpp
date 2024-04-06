@@ -1,3 +1,5 @@
+#include <iostream>
+
 bool isWindows(){
     #ifdef _WIN32
     bool os = true;
@@ -9,3 +11,4 @@ bool isWindows(){
     #endif
     return os;
 }
+
