@@ -1,9 +1,11 @@
 #include <iostream>
 #include "../include/Player.h"
 int main() {
+    bool notDead = true;
     Player mainPlayer;
-    int var;
-    mainPlayer.printItems();
+    Player enemyPlayer;
+    while(notDead==true){
+        
 
+    }
 }
-
