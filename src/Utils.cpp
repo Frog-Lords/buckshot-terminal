@@ -1,7 +1,7 @@
 #include "../include/Utils.h"
-#include <iomanip>
+#include <iostream>
 
 
 void Utils::printMainMenu(){
-    
+    std::cout<<"HI";
 }
