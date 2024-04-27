@@ -8,14 +8,12 @@ public:
     Player(/* args */);
     Player(int startingHP, items inventory[]);
     ~Player();
-    int gainHP(int hpGain);
+    int gainHP(unsigned int hpGain);
     int getHP();
     items getItem(int indexChoice);
     void getInventory();
     std::string getName();
-    void addItem();
-    void removeItem();
-    void loseHP(int hpLost); // lost health womp womp
+    void loseHP(unsigned int hpLost); // lost health womp womp
     void printItem(int indexChoice);
     void printItems(); // 0: item 1, 1: item 2: number corresponds to array index
 
