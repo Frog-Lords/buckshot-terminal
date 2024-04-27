@@ -1,109 +1,59 @@
-#include <iostream>
-#include <iomanip>
+#include "../include/generate_shotgun.h"
 #include "../include/Player.h"
-
-
-void shootPlayer(Player& target); //shoot other Player by reference of their object
-int useItem(Player& target, int indexChoice); //inventory [index] gives corresponding item provides prompt are you sure yes/no
-void printHealth(Player* targets[], int size);
+#include "../include/PlayerHandler.h"
+#include <string>
+#include "../include/Utils.h"
 
 
 int main() {
-    Player mainPlayer;
+    Player::items mainInventory [] = {Player::beer, Player::cuffs, Player::cigPack, Player::cuffs, Player::mGlass, Player::saw}; 
+    Player mainPlayer(4, mainInventory);
     Player enemy;
+    PlayerHandler playerManager;
+    Utils utilityManager;
+
     static const int TOTAL_PLAYERS = 2;
     Player* players[] = {&mainPlayer, &enemy};
-    enemy.loseHP(1);
-    printHealth(players, TOTAL_PLAYERS);
-    std::cout<<std::endl;
+
+// DECLARATION ZONE ^^^^
+    std::cout << R"(
+Welcome to Buckshot Roulette Terminal Edition!
+
+The air is thick with the smell of rust and old wood.
+You find yourself in a dimly lit room. 
+The only light coming from a flickering bulb that swings gently overhead.
+Eerie shadows linger on the walls.
+The walls themselves are lined with peeling paint and old, yellowed newspaper clippings.
+A heavy silence hangs in the air, only broken by the distant dripping of water.
+
+Enter Any Key to Continue!
+
+)";
+
+    std::string dummyValue;
+    std::cin >> dummyValue;
+    utilityManager.clearScreen();
+
+    std::cout << R"(
+As your eyes adjust to the dim light, you notice a figure in the corner.
+It's hard to tell their age, gender, or even if they're human, their features shrouded in shadows and a thick, tattered cloak.
+The figure's hands are steady, holding a faded document outstretched towards you.
+As you step closer, a cold draft chills your spine.
+
+The document reads:
+
+'Take A Game of Chance For It is All You Got Left
+These are the following rules if you wish to partake
+Oh dear Oh my What Choice Do You Have to Make
+It is clear to see you don't have what it takes'
+
+The figure doesn't move, but their unseen eyes seem to pierce through you, waiting for your decision. What will you do?
+
+)";
+
+    //playerManager.printHealth(players, TOTAL_PLAYERS);
+    //mainPlayer.printItems();
+    //std::stack <int> shotgun = generate_shotgun(5);
+    //std::cout<< shotgun.top()<<std::endl;
+    
 };
-
-void printHealth(Player* targets[], int size){
-    for (int i = 0; i < size; i++) {
-        Player* player = targets[i];
-        int currentHealth = player->getHP();
-        std::cout << "Player " << (i + 1) << " Health: ";
-        for (int j = 0; j < currentHealth; j++) {
-            std::cout << "🗲 ";
-        }
-        std::cout << std::setw(10);
-    }
-    std::cout << std::endl;
-};
-
-void shootPlayer(Player& target) {
-    // Example: Reduce target's HP by 1
-    target.loseHP(1);
-};
-
-
-// Use an item from the inventory
-int promptItem(Player& target) {
-    std::cout << "Please Enter A Number For An Item To Use\n";
-    target.printItems();
-    int indexChoice;
-    std::cin >> indexChoice;
-    if (indexChoice < 0 || indexChoice >= 7) {
-        std::cout << "Invalid index. Please try again." << std::endl;
-        return -1;
-    }
-    char choice;
-    std::cout << "Are you sure you want to use this item? (Y/N)" << std::endl;
-    std::cin >> choice;
-    choice = std::tolower(choice);
-
-    if (choice == 'y') {
-        std::cout << "Confirmed Selected Item ";
-        target.printItem(indexChoice);
-        return indexChoice;
-    } else if (choice == 'n') {
-        std::cout << "Chose not to select item." << std::endl;
-        return 0;
-    } else {
-        std::cout << "Invalid selection." << std::endl;
-        return -2;
-    }
-}
-
-int useItem(Player& target, int indexChoice) {
-    if (indexChoice < 0 || indexChoice >= 7) {
-        std::cout << "Invalid item index.\n";
-        return -1;
-    }
-
-    Player::items item = target.getItem(indexChoice);  // Assume getItem is updated to handle an index.
-    switch (item) {
-    case Player::null:
-        std::cout << "You tried to use an empty slot.\n";
-        break;
-    case Player::beer:
-        std::cout << "Beer effect not implemented yet.\n";
-        break;
-    case Player::cigPack:
-        target.gainHP(1);
-        std::cout << "Gained 1 HP!\n";
-        break;
-    case Player::cuffs:
-        std::cout << "Cuffs effect not implemented yet.\n";
-        break;
-    case Player::mGlass:
-        std::cout << "Future seeing effect not implemented yet.\n";
-        break;
-    case Player::saw:
-        std::cout << "Double damage effect not implemented yet.\n";
-        break;
-    default:
-        std::cout << "Invalid item selection.\n";
-        break;
-    }
-    return 0;
-}
-
-
-/*
-Beer: ejects shell
-cigPack: Restore 1HP
-Cuffs: Skip Dealers Turn
-mGlass: Lets you peek at shell
-saw: Double Damage
-*/

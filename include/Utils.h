@@ -1,12 +1,7 @@
 #pragma once
-class Utils
+struct Utils
 {
-private:
-    /* data */
-public:
-    Utils(/* args */) {}
-    ~Utils() {}
-
-    void printMainMenu();
-   
+    bool os_determiner();
+    void clearScreen();
 };
+

@@ -31,7 +31,7 @@ Player::~Player() {
    std::cout<<"womp";
 }
 
-int Player::gainHP(int hpGain){
+int Player::gainHP(unsigned int hpGain){
     hp += hpGain;
     if(hp>MAXHP){
         hp = MAXHP;
@@ -57,7 +57,7 @@ std::string Player::getName(){
 }
 
 // Lose HP
-void Player::loseHP(int hpLost) {
+void Player::loseHP(unsigned int hpLost) {
     hp -= hpLost;
     if(hp < MINHP) hp = MINHP;
 }
