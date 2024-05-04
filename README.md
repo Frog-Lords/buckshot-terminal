@@ -1,3 +1,3 @@
 # buckshot-terminal
 
-This is being developed by two nerds who do not know what they are doing
+This is an Honors project submitted for the Honors Program.

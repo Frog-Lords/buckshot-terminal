@@ -14,33 +14,46 @@ void PlayerHandler::printHealth(Player* targets[], int size){
     std::cout << std::endl;
 };
 
-void PlayerHandler::shootPlayer(Player& target, std::stack<int> shotgun, unsigned int modifier) {
+void PlayerHandler::shootPlayer(Player& target, std::stack<int>& shotgun, unsigned int modifier) {
     // Example: Reduce target's HP by 1
     bool isLiveBullet = shotgun.top();
     shotgun.pop();
 
     if(isLiveBullet == true){
         target.loseHP(1*modifier);
-        std::cout<<"A live round has just been fired";
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << "*BANG*\n";
+        sleep(2);
         return;
+    } else {
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << "*click*\n";
+        sleep(2);
     }
-    std::cout<< "A blank has just been fired";
-
-    
 };
 
 // Use an item from the inventory
 int PlayerHandler::promptItem(Player& target) {
-    std::cout << "Please Enter A Number For An Item To Use\n";
+    std::cout << "Use which item?\n";
     target.printItems();
     int indexChoice;
     std::cin >> indexChoice;
-    if (indexChoice < 0 || indexChoice >= 7) {
+    if (indexChoice < 0 || indexChoice > 7) {
         std::cout << "Invalid index. Please try again." << std::endl;
         return -1;
     }
     char choice;
-    std::cout << "Are you sure you want to use this item? (Y/N)" << std::endl;
+    std::cout << "Are you sure? (Y/N)" << std::endl;
     std::cin >> choice;
     choice = std::tolower(choice);
 
@@ -58,60 +71,57 @@ int PlayerHandler::promptItem(Player& target) {
 }
 
 int PlayerHandler::useItem(Player& target, int indexChoice, std::stack<int> shotgun) {
-    if (indexChoice < 0 || indexChoice >= 7) {
+    bool isLiveBullet;
+    if (indexChoice < 0 || indexChoice > 7) {
         std::cout << "Invalid item index.\n";
         return -1;
     }
 
     Player::items item = target.getItem(indexChoice);  // Assume getItem is updated to handle an index.
     switch (item) {
-
-    case Player::null:{
+        case Player::null:
         std::cout << "You tried to use an empty slot.\n";
         break;
-    }
-
-    case Player::beer:{
-        bool isLiveBullet = shotgun.top();
+        
+        case Player::beer:
+        isLiveBullet = shotgun.top();
         shotgun.pop();
         if (isLiveBullet==true){
             std::cout << "A live shell was ejected.\n";
             break;       
-        }
-        std::cout<<"A blank was ejected\n";
+        } else {
+            std::cout<<"A blank was ejected\n"; 
         break;
-    }
-
-    case Player::cigPack:{
+        }
+        
+        case Player::cigPack:
         target.gainHP(1);
         std::cout << "Gained 1 HP!\n";
         break;
-    }
 
-    case Player::cuffs:{
+        case Player::cuffs:
         std::cout << "Cuffs effect not implemented yet.\n";
         break;
-        }
 
-    case Player::mGlass:{
-        bool isLiveBullet = shotgun.top();
+        case Player::mGlass:
+        isLiveBullet = shotgun.top();
         if(isLiveBullet == true){
             std::cout << "Seeing the future it is revealed the bullet is live\n";
             break;
-        }
+            }
 
         std::cout<< "Seeing the future it is revealed it is a blank\n";
         break;
-    }
-    case Player::saw:{
+
+        case Player::saw:
         std::cout << "Double damage effect not implemented yet.\n";
         break;
-    }
-    default:{
+    
+        default:
         std::cout << "Invalid item selection.\n";
         break;
     }
-    }
+    
     return 0;
 }
 
