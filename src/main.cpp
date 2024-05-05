@@ -10,17 +10,17 @@ enum gameState { MAIN_MENU, INTRO, PLAYING, WIN_STATE, GAME_OVER };
 
 
 void runGame();
-void mainMenu(Utils util);
-void intro(Utils util, std::string& name);
+void mainMenu();
+void intro(std::string& name);
 void playingGame();
-void playerTurn(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
+void playerTurn(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
 int chooseAction();
-void executeAction(int eans, Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
-void shootTarget(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& dealerSkipped);
-void showDealerItems(Player& dealer, Player::items dealerInventory[]);
-void dealerTurn(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
-void dealerAction(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped);
-void dealerUseItem(int item, Player& dealer, Player::items dInventory[]);
+void executeAction(int& eans, Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
+void shootTarget(int& sans, Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& dealerSkipped);
+void showDealerItems(Player& dealer);
+void dealerTurn(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped);
+void dealerAction(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped);
+void dealerUseItem(int item, Player& dealer);
 
 int main() {
     srand(time(0));
@@ -37,12 +37,12 @@ void runGame() {
     while (isInGame) { //gameplay loop
         switch (currentState) {
             case gameState::MAIN_MENU:
-            mainMenu(utilFunction);
+            mainMenu();
             currentState = INTRO;
             break;
 
             case gameState::INTRO:
-            intro(utilFunction, playerName);
+            intro(playerName);
             currentState = PLAYING;
             break;
 
@@ -60,19 +60,21 @@ void runGame() {
     }   
 }
 
-void mainMenu(Utils util) {
-    std::string ans;
+void mainMenu() {
+    Utils util;
+    std::string dummyValue;
     std::cout << R"(Welcome to the C++ adaptation of Buckshot Roulette!
       Original game created by Mike Klubnika
          Programmed in C++ by Andrew Tran
 
 Enter any key to continue:)";
-    std::cin >> ans;
+    std::cin >> dummyValue;
     util.clearScreen();
 };
 
-void intro(Utils util, std::string& name) {
-    std::string ans;
+void intro(std::string& name) {
+    Utils util;
+    std::string dummyValue;
     std::cout << "You find yourself in a dimly lit chamber, surrounded by metal walls on all sides, the smell of rust and the sounds of distant machinery in the distance." << std::endl;
     sleep(5);
     std::cout << "In the center lies what appears to be a game table resembling that of a casino, except that the normally inviting green felt top is instead a bleak greenish-gray metal." << std::endl;
@@ -80,7 +82,7 @@ void intro(Utils util, std::string& name) {
     std::cout << "You can vaguely make out a monstrous figure in the darkness baring sharp teeth and no eyes in its sockets." << std::endl;
     sleep(2);
     std::cout << "\nEnter any key to continue: ";
-    std::cin >> ans;
+    std::cin >> dummyValue;
     util.clearScreen();
 
     std::cout << "It slides a form across the table." << std::endl;
@@ -104,19 +106,22 @@ void intro(Utils util, std::string& name) {
 
     std::cout << "The dealer takes a shotgun out from beneath the table." << std::endl;
     sleep(2);
+    std::cout << "\nEnter any key to continue: ";
+    std::cin >> dummyValue;
+    util.clearScreen();
 }   
 
 void playingGame() {
     Player::items mainInventory[8] = {Player::null, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null}; //setup player's inventory 
-    Player mainPlayer(4, mainInventory); //initialize both players with 4 hp and 0 items
-    Player::items dealerInventory[8] = {Player::null, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null}; //setup dealer's inventory
-    Player dealer(4, dealerInventory);
+    Player mainPlayer(5, mainInventory); //initialize both players with 4 hp and 0 items
+    Player::items dealerInventory[8] = {Player::beer, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null, Player::null}; //setup dealer's inventory
+    Player dealer(5, dealerInventory);
     Player* players[] = {&mainPlayer, &dealer};
     PlayerHandler action;
     Utils util;
     
     while(mainPlayer.getHP() > 0 && dealer.getHP() > 0) {
-        unsigned int damageModifier = 1;
+     int damageModifier = 1;
         bool playerSkipped = false;
         bool dealerSkipped = false;
 
@@ -124,19 +129,27 @@ void playingGame() {
         std::stack<int> shotgun = generateShotgun(totalShells);
 
         while(!shotgun.empty() && mainPlayer.getHP() > 0 && dealer.getHP() > 0) {
-            std::cout << "Your charges: " << mainPlayer.getHP() << "\nDealer's charges: " << dealer.getHP() << "\n\n";
-            playerTurn(mainPlayer, mainInventory, dealer, dealerInventory, action, damageModifier, shotgun, playerSkipped, dealerSkipped);
+            action.printHealth(players,2);
+            playerTurn(mainPlayer, dealer, damageModifier, shotgun, playerSkipped, dealerSkipped);
 
-            if(!shotgun.empty()) {
-            dealerTurn(mainPlayer, mainInventory, dealer, dealerInventory, action, damageModifier, shotgun, playerSkipped, dealerSkipped);
+            if(!shotgun.empty() && mainPlayer.getHP() > 0 && dealer.getHP() > 0) {
+            dealerTurn(mainPlayer, dealer, damageModifier, shotgun, playerSkipped, dealerSkipped);
             }
         }
-        
+        std::cout << "All rounds expended. Reloading rounds";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(1);
+        std::cout << ".";
+        sleep(2);
+        util.clearScreen();
     };
     
 }
     
-void playerTurn(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
+void playerTurn(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
     Utils util;
     int ans = 0;
     
@@ -147,7 +160,7 @@ void playerTurn(Player& player, Player::items pInventory[], Player& dealer, Play
     } else {
         while(ans != 1) {
         ans = chooseAction();
-        executeAction(ans, player, pInventory, dealer, dInventory, playerActions, damage, shotgun, playerSkipped, dealerSkipped);
+        executeAction(ans, player, dealer, damage, shotgun, playerSkipped, dealerSkipped);
         }
     }
     damage = 1; //when the player ends their turn after using a handsaw, reset the damage modifier back to normal
@@ -169,7 +182,7 @@ int chooseAction() {
     return selection;
 }
 
-void executeAction(int eans, Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
+void executeAction(int& eans, Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
     Utils util;
     int target = -1;
     util.clearScreen();
@@ -178,7 +191,7 @@ void executeAction(int eans, Player& player, Player::items pInventory[], Player&
     switch(eans) {
         
         case 1:
-        shootTarget(player, pInventory, dealer, dInventory, playerActions, damage, shotgun, dealerSkipped);
+        shootTarget(eans, player, dealer, damage, shotgun, dealerSkipped);
         break;
 
         case 2:
@@ -186,65 +199,70 @@ void executeAction(int eans, Player& player, Player::items pInventory[], Player&
         break;
 
         case 3:
-        showDealerItems(dealer, dInventory);
+        showDealerItems(dealer);
         break;
     }
 }
 
-void shootTarget(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& dealerSkipped) {
-    Utils utilFunction;
-    int target;
+void shootTarget(int& sans, Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& dealerSkipped) {
+    PlayerHandler action;
+    Utils util;
     std::string dummyValue;
 
-    std::cout << "Who?\n1. Dealer\n2. Yourself" << std::endl;
-        std::cin >> target;
-        utilFunction.clearErrorFlag();
+    std::cout << "Who?\n1. Dealer\n2. Yourself\n3. [Back]" << std::endl;
+        std::cin >> sans;
+        util.clearErrorFlag();
 
-        while(target < 1 || target > 2) {
+        while(sans < 1 || sans > 3) {
             std::cout << "Please input a valid choice." << std::endl;
-            std::cin >> target;
-            utilFunction.clearErrorFlag();
+            std::cin >> sans;
+            util.clearErrorFlag();
         }
-        if(target == 1) {
-            utilFunction.clearScreen();
-            playerActions.shootPlayer(dealer, shotgun, damage);
-        } else {
+        if(sans == 3) {
+            util.clearScreen(); //go back to main manu
+        } else if(sans == 1) {
+            util.clearScreen();
+            action.shootPlayer(dealer, shotgun, damage);
+            std::cout << "Enter any key to continue: ";
+            std::cin >> dummyValue;
+        } else if(sans == 2){
             int prevHP = player.getHP();
-            utilFunction.clearScreen();
-            playerActions.shootPlayer(player, shotgun, damage);
+            util.clearScreen();
+            action.shootPlayer(player, shotgun, damage);
             if(player.getHP() == prevHP) { // if the player did not lose hp, A.K.A shot themselves with a blank, skip the dealer's turn.
                 dealerSkipped = true;
             }
-        }
-        std::cout << "Enter any key to continue: ";
-        std::cin >> dummyValue;
+            std::cout << "Enter any key to continue: ";
+            std::cin >> dummyValue;
+        } 
+        
 }
 
-void showDealerItems(Player& dealer, Player::items dInventory[]) {
+void showDealerItems(Player& dealer) {
     Utils util;
-    bool dealerHasItems = false;
+    bool dealerHasItems;
     std::string dummyValue;
 
-        for(int i = 0; i < 8; ++i) {
-            if(dInventory[i] != Player::null) {
-                dealerHasItems = true;
-                break;
-            }
+    for(int i = 0; i < 8; ++i) {
+        if(dealer.inventory[i] != Player::null) {
+            dealerHasItems = true;
+            break;
         }
+    }
 
-        std::cout << "The dealer has ";
-        if(dealerHasItems) {
-            dealer.printItems();
-        } else {
-            std::cout << "no items." << std::endl;
-        }
+    std::cout << "The dealer has ";
+    if(dealerHasItems) {
+        dealer.printItems();
+    } else {
+        std::cout << "no items." << std::endl;
+    }
 
-        std::cout << "Enter any key to continue: ";
-        std::cin >> dummyValue;
-        util.clearScreen();
+    std::cout << "Enter any key to go back: ";
+    std::cin >> dummyValue;
+    util.clearScreen();
 }
 
-void dealerTurn(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
+void dealerTurn(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped, bool& dealerSkipped) {
     Utils util;
     
     if(dealerSkipped) {
@@ -252,13 +270,14 @@ void dealerTurn(Player& player, Player::items pInventory[], Player& dealer, Play
         sleep(3);
         dealerSkipped = false; //if the dealer was skipped, unskip him
     } else {
-        dealerAction(player, pInventory, dealer, dInventory, playerActions, damage, shotgun, playerSkipped);
+        dealerAction(player, dealer, damage, shotgun, playerSkipped);
     }
     damage = 1; //if the dealer uses a handsaw, reset the damage modifier back to normal
     util.clearScreen();
 }
 
-void dealerAction(Player& player, Player::items pInventory[], Player& dealer, Player::items dInventory[], PlayerHandler& playerActions, unsigned int& damage, std::stack<int>& shotgun, bool& playerSkipped) {
+void dealerAction(Player& player, Player& dealer, int& damage, std::stack<int>& shotgun, bool& playerSkipped) {
+    PlayerHandler action;
     bool knowsNextBullet = false;
     bool drinksBeer = false;
 
@@ -268,18 +287,18 @@ void dealerAction(Player& player, Player::items pInventory[], Player& dealer, Pl
     if ((knowsNextBullet && shotgun.top() == 1) || (!knowsNextBullet && target == 1)) {
         // shoot the player if either 1) he knows the next bullet and it's live, OR 2) he doesn't know and does a random coin flip and the number is 1
         std::cout << "you." << std::endl;
-        playerActions.shootPlayer(player, shotgun, damage);
+        action.shootPlayer(player, shotgun, damage);
     } else{
         // shoots himself if either 1) he knows the next bullet and it's blank, OR 2) he does a random coin flip and the number is 0
         std::cout << "itself." << std::endl;
         int prevHP = dealer.getHP();
-        playerActions.shootPlayer(dealer, shotgun, damage);
+        action.shootPlayer(dealer, shotgun, damage);
         if(dealer.getHP() == prevHP) { // if the dealer did not lose hp, A.K.A if he shot himself with a blank, skip the player's turn.
             playerSkipped = true;
         }
     } 
 }
 
-void dealerUseItem(int item, Player& dealer, Player::items dInventory[]) {
+void dealerUseItem(int item, Player& dealer) {
     //make the dealer use an item
 }

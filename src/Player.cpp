@@ -7,7 +7,7 @@ Player::Player() {
     for(int i = 0; i < 8; ++i) {
         inventory[i] = null;
     }
-    hp = 4;
+    hp = 5;
 }
 
 Player::Player(int startingHP, items startingInventory[]){
@@ -28,12 +28,12 @@ Player::Player(int startingHP, items startingInventory[]){
 }
 // Destructor
 Player::~Player() {
-   std::cout<<"womp";
+   std::cout<<"This Player Has Died Game Over";
 }
 
 int Player::gainHP(unsigned int hpGain){
     hp += hpGain;
-    if(hp>MAXHP){
+    if(hp > MAXHP){
         hp = MAXHP;
     }
     return 0;
@@ -44,7 +44,7 @@ int Player::getHP(){
 }
 
 Player::items Player::getItem(int index) {
-    if (index >= 0 && index < 7) {  // Check if index is within the valid range
+    if (index >= 0 && index < 8) {  // Check if index is within the valid range
         return inventory[index];
     } else {
         return null;  // Return null' if the index is invalid
@@ -77,7 +77,7 @@ void Player::printItem(int indexChoice) {
 void Player::printItems() {
     std::cout << std::endl;
     for(int i = 0; i < 8; ++i) {
-        std::cout << i << ": ";
+        std::cout << i + 1 << ": ";
         switch(inventory[i]) {
             case beer: std::cout << "Beer (eject the current round)"; break;
             case cigPack: std::cout << "Cigarette Pack (restore 1 charge)"; break;

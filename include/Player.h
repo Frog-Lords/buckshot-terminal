@@ -16,13 +16,13 @@ public:
     void loseHP(unsigned int hpLost); // lost health womp womp
     void printItem(int indexChoice);
     void printItems(); // 0: item 1, 1: item 2: number corresponds to array index
-
+    items inventory[8];  // Now 'items' is defined before use
 
 private:
     static const int MINHP = 0;
-    static const int MAXHP = 4;
+    static const int MAXHP = 5;
     std::string name;
     int hp;
-    items inventory[7];  // Now 'items' is defined before use
+
 
 };
