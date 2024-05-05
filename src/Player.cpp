@@ -4,7 +4,7 @@
 // Constructor
 Player::Player() {
     // Initialize inventory with 'null' items
-    for(int i = 0; i < 7; ++i) {
+    for(int i = 0; i < 8; ++i) {
         inventory[i] = null;
     }
     hp = 4;
@@ -20,7 +20,7 @@ Player::Player(int startingHP, items startingInventory[]){
     }
     
     hp=startingHP;
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 8; i++)
     {
         inventory[i] = startingInventory[i];
     }
@@ -69,21 +69,22 @@ void Player::printItem(int indexChoice) {
             case cuffs: std::cout << "Handcuffs"; break;
             case mGlass: std::cout << "Magnifying Glass"; break;
             case saw: std::cout << "Hand Saw"; break;
-            default: std::cout << "Empty"; break;
+            default: std::cout << " "; break;
         }
         std::cout << std::endl;
 }
 // Print items in inventory
 void Player::printItems() {
-    for(int i = 0; i < 7; ++i) {
+    std::cout << std::endl;
+    for(int i = 0; i < 8; ++i) {
         std::cout << i << ": ";
         switch(inventory[i]) {
-            case beer: std::cout << "Beer"; break;
-            case cigPack: std::cout << "Cigarette Pack"; break;
-            case cuffs: std::cout << "Handcuffs"; break;
-            case mGlass: std::cout << "Magnifying Glass"; break;
-            case saw: std::cout << "Hand Saw"; break;
-            default: std::cout << "Empty"; break;
+            case beer: std::cout << "Beer (eject the current round)"; break;
+            case cigPack: std::cout << "Cigarette Pack (restore 1 charge)"; break;
+            case cuffs: std::cout << "Handcuffs (skip the dealer's next turn)"; break;
+            case mGlass: std::cout << "Magnifying Glass (look at the current round)"; break;
+            case saw: std::cout << "Hand Saw (the next live round will deal 2 damage)"; break;
+            default: std::cout << " "; break;
         }
         std::cout << std::endl;
     }

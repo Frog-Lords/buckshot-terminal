@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "../include/Utils.h"
 
 bool Utils::os_determiner(){
@@ -13,11 +14,16 @@ bool Utils::os_determiner(){
     return os;
 }
 
-void Utils::clearScreen(){
+void Utils::clearScreen(){ //clears the terminal screen for optimal gaming experience
     bool isWindows = os_determiner();
     if(isWindows == true){
         system("cls");
         return;
     }
     system("clear");
+}
+
+void Utils::clearErrorFlag() { //run directly after a non-string cin to avoid everything breaking
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
